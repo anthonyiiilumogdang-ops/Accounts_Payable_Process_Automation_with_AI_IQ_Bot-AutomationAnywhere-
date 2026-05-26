@@ -1,0 +1,1865 @@
+{
+  "triggers": [],
+  "nodes": [
+    {
+      "uid": "573d4dcc-4a92-4327-8793-f1fb3e2915e4",
+      "commandName": "emailConnect",
+      "packageName": "Email",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "session",
+          "value": {
+            "type": "STRING",
+            "string": "EmailSession"
+          }
+        },
+        {
+          "name": "serverType",
+          "value": {
+            "type": "STRING",
+            "string": "OUTLOOK"
+          }
+        },
+        {
+          "name": "select",
+          "value": {
+            "type": "STRING",
+            "string": "LIST"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "cd1f1edc-8950-4cc9-bec8-d6fd2c1c7958",
+      "commandName": "saveAllAtatchments",
+      "packageName": "Email",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "sessionName",
+          "value": {
+            "type": "STRING",
+            "string": "EmailSession"
+          }
+        },
+        {
+          "name": "readStatus",
+          "value": {
+            "type": "STRING",
+            "string": "UNREAD"
+          }
+        },
+        {
+          "name": "enableStatusNoUpdate",
+          "value": {
+            "type": "BOOLEAN",
+            "boolean": false
+          }
+        },
+        {
+          "name": "folder",
+          "value": {
+            "type": "STRING",
+            "string": "Inbox/AP Invoices"
+          }
+        },
+        {
+          "name": "folderPath",
+          "value": {
+            "type": "STRING",
+            "expression": "$v_InvoicesFolder$"
+          }
+        },
+        {
+          "name": "checkOverrwrite",
+          "value": {
+            "type": "BOOLEAN",
+            "boolean": true
+          }
+        }
+      ]
+    },
+    {
+      "uid": "ef8d5b81-a3cc-4811-8311-a7fa1bf59c5f",
+      "commandName": "moveEmail",
+      "packageName": "Email",
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "sessionName",
+          "value": {
+            "type": "STRING",
+            "string": "EmailSession"
+          }
+        },
+        {
+          "name": "destinationfolderPath",
+          "value": {
+            "type": "STRING",
+            "string": "Inbox/AP Processed"
+          }
+        },
+        {
+          "name": "readStatus",
+          "value": {
+            "type": "STRING",
+            "string": "ALL"
+          }
+        },
+        {
+          "name": "sourceFolder",
+          "value": {
+            "type": "STRING",
+            "string": "Inbox/AP Invoices"
+          }
+        },
+        {
+          "name": "subject",
+          "value": {
+            "type": "STRING",
+            "string": ""
+          }
+        },
+        {
+          "name": "from",
+          "value": {
+            "type": "STRING",
+            "string": ""
+          }
+        }
+      ]
+    },
+    {
+      "uid": "668bff82-a27e-473e-86b3-13a0ae6cac7d",
+      "commandName": "loop.commands.start",
+      "packageName": "Loop",
+      "children": [
+        {
+          "uid": "e560e55e-c269-4e84-9cfa-eb62bcefc093",
+          "commandName": "assign",
+          "packageName": "String",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceString",
+              "value": {
+                "type": "STRING",
+                "expression": "$v_InvoicesFolder$\\$v_FileName$.$v_FileExtension$"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "v_InvoicePath"
+          }
+        },
+        {
+          "uid": "9e21c974-e7c8-4130-babe-a7affa9ea232",
+          "commandName": "try",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "87ac1b87-1b43-4902-b765-e9a0cc8fe8b2",
+              "commandName": "ExtractionV2",
+              "packageName": "IQ-Bot-Extraction360",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "inputFilePath",
+                  "value": {
+                    "type": "FILE",
+                    "expression": "file://$v_InvoicePath$"
+                  }
+                },
+                {
+                  "name": "SelectLearningInstance",
+                  "value": {
+                    "type": "STRING",
+                    "string": "FROM_API"
+                  }
+                },
+                {
+                  "name": "learningInstanceIdFromAPI",
+                  "value": {
+                    "type": "STRING",
+                    "string": "0D29C8BC-F2AF-4A6E-BD32-8933CB625220",
+                    "label": "Invoice Extraction"
+                  }
+                },
+                {
+                  "name": "outputMode",
+                  "value": {
+                    "type": "STRING",
+                    "string": "OUTPUT_MODE_LOCAL"
+                  }
+                },
+                {
+                  "name": "outputFolder",
+                  "value": {
+                    "type": "FILE",
+                    "expression": "file://$v_OutputFolder$"
+                  }
+                },
+                {
+                  "name": "docAiReceiptUrl",
+                  "value": {
+                    "type": "STRING",
+                    "string": ""
+                  }
+                },
+                {
+                  "name": "groupLabel",
+                  "value": {
+                    "type": "STRING",
+                    "string": ""
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "51df6798-53cc-426f-a0ac-e8cbe0586863",
+              "commandName": "OpenCSVTXT",
+              "packageName": "CsvTxt",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "STRING",
+                    "string": "CSVSession"
+                  }
+                },
+                {
+                  "name": "filePath",
+                  "value": {
+                    "type": "FILE",
+                    "expression": "file://$v_OutputFolder$/Validation/$v_FileName$.csv"
+                  }
+                },
+                {
+                  "name": "containsHeader",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": true
+                  }
+                },
+                {
+                  "name": "delimeter",
+                  "value": {
+                    "type": "STRING",
+                    "string": "comma"
+                  }
+                },
+                {
+                  "name": "trimLeadingSpace",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "trimTrailingSpace",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "encoding",
+                  "value": {
+                    "type": "STRING",
+                    "string": "UTF-8"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "d3238b51-b456-40d6-bae1-7c2f68d08870",
+              "commandName": "ReadFromCsvTxt",
+              "packageName": "CsvTxt",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "STRING",
+                    "string": "CSVSession"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "v_CSVData"
+              }
+            },
+            {
+              "uid": "8bd14319-bfbf-4999-8954-bec5577de82a",
+              "commandName": "loop.commands.start",
+              "packageName": "Loop",
+              "children": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "loopType",
+                  "value": {
+                    "type": "STRING",
+                    "string": "ITERATOR"
+                  }
+                },
+                {
+                  "name": "iterator",
+                  "returnTo": {
+                    "type": "DICTIONARY",
+                    "dictionary": [
+                      {
+                        "key": "invoice_number",
+                        "value": {
+                          "type": "VARIABLE",
+                          "variableName": "v_InvoiceNumber"
+                        }
+                      },
+                      {
+                        "key": "invoice_date",
+                        "value": {
+                          "type": "VARIABLE",
+                          "variableName": "v_InvoiceDate"
+                        }
+                      },
+                      {
+                        "key": "total_amount",
+                        "value": {
+                          "type": "VARIABLE",
+                          "variableName": "v_TotalAmount"
+                        }
+                      },
+                      {
+                        "key": "vendor_name",
+                        "value": {
+                          "type": "VARIABLE",
+                          "variableName": "v_VendorName"
+                        }
+                      }
+                    ]
+                  },
+                  "attributes": [
+                    {
+                      "name": "sourceTable",
+                      "value": {
+                        "type": "VARIABLE",
+                        "variableName": "v_CSVData"
+                      }
+                    }
+                  ],
+                  "value": {
+                    "type": "ITERATOR",
+                    "iteratorName": "iteratorTableRow",
+                    "packageName": "DataTable"
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "f34b3903-98fe-44c3-9123-5685d8fa1b39",
+              "commandName": "CloseCsvTxt",
+              "packageName": "CsvTxt",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "STRING",
+                    "string": "CSVSession"
+                  }
+                }
+              ]
+            }
+          ],
+          "branches": [
+            {
+              "uid": "e830107d-5859-4bd6-98d9-db68bf3de18c",
+              "commandName": "catch",
+              "packageName": "ErrorHandler",
+              "children": [
+                {
+                  "uid": "f92eaef2-5591-4a37-9e8b-2da8a5581ec7",
+                  "commandName": "assign",
+                  "packageName": "String",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "sourceString",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$v_EmailSummary$$String:newline$ERROR processing: $v_FileName$ - $v_ErrorMessage$ (Line: $v_ErrorLine.Number:toString$)"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "v_EmailSummary"
+                  }
+                },
+                {
+                  "uid": "7626ca1c-fb47-44a1-90e6-9842975c412a",
+                  "commandName": "logToFile",
+                  "packageName": "LogToFile",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "filePath",
+                      "value": {
+                        "type": "FILE",
+                        "expression": "file://$v_ProjectFolder$/ErrorLog.txt"
+                      }
+                    },
+                    {
+                      "name": "logContent",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "ERROR sending email: $v_ErrorMessage$ (Line: $v_ErrorLine.Number:toString$)"
+                      }
+                    },
+                    {
+                      "name": "appendTimestamp",
+                      "value": {
+                        "type": "BOOLEAN",
+                        "boolean": true
+                      }
+                    },
+                    {
+                      "name": "logOption",
+                      "value": {
+                        "type": "STRING",
+                        "string": "APPEND_FILE"
+                      }
+                    },
+                    {
+                      "name": "encodingValue",
+                      "value": {
+                        "type": "STRING",
+                        "string": "ANSI"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                },
+                {
+                  "name": "continueOnError",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ],
+              "returns": {
+                "errorMessage": {
+                  "type": "VARIABLE",
+                  "variableName": "v_ErrorMessage"
+                },
+                "errorLineNumber": {
+                  "type": "VARIABLE",
+                  "variableName": "v_ErrorLine"
+                }
+              }
+            }
+          ],
+          "disabled": false
+        },
+        {
+          "uid": "23764861-3a6f-434f-805b-13cd138556a4",
+          "commandName": "try",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "ccc938ec-e5f9-4e2f-bc9c-ad949898e32f",
+              "commandName": "deleteFolder",
+              "packageName": "Folder",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "folderPath",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_OutputFolder$\\Success"
+                  }
+                },
+                {
+                  "name": "isSize",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "isDate",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ]
+            }
+          ],
+          "branches": [
+            {
+              "uid": "7a64a6b2-b716-441f-97af-6e9f7caf984d",
+              "commandName": "catch",
+              "packageName": "ErrorHandler",
+              "children": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false
+        },
+        {
+          "uid": "e40050b2-f054-4a16-8ee0-35fe670f8e54",
+          "commandName": "try",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "1c21878b-3825-4bbb-880b-69dffce9e228",
+              "commandName": "deleteFolder",
+              "packageName": "Folder",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "folderPath",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_OutputFolder$\\Failed"
+                  }
+                },
+                {
+                  "name": "isSize",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "isDate",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ]
+            }
+          ],
+          "branches": [
+            {
+              "uid": "946d09bd-6f42-44c5-bb6d-4de512689aac",
+              "commandName": "catch",
+              "packageName": "ErrorHandler",
+              "children": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false
+        },
+        {
+          "uid": "b318503c-d22f-4db4-9831-7f50a5e11397",
+          "commandName": "try",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "b8a300a2-0472-4020-b4d0-5950f1fe9a06",
+              "commandName": "deleteFolder",
+              "packageName": "Folder",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "folderPath",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_OutputFolder$\\Validation"
+                  }
+                },
+                {
+                  "name": "isSize",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                },
+                {
+                  "name": "isDate",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": false
+                  }
+                }
+              ]
+            }
+          ],
+          "branches": [
+            {
+              "uid": "6dc20335-c471-4771-9dae-c70a7607eaa2",
+              "commandName": "catch",
+              "packageName": "ErrorHandler",
+              "children": [],
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "exceptionType",
+                  "value": {
+                    "type": "EXCEPTION",
+                    "exceptionName": "BotException",
+                    "packageName": "ErrorHandler"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false
+        },
+        {
+          "uid": "ac414a95-53c1-4110-9801-bf3f7c6f9b0b",
+          "commandName": "OpenSpreadsheet",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "excelSourceOption",
+              "value": {
+                "type": "STRING",
+                "string": "desktopfilepath"
+              }
+            },
+            {
+              "name": "filePath",
+              "value": {
+                "type": "FILE",
+                "expression": "file://$v_ExcelQueuePath$"
+              }
+            },
+            {
+              "name": "containsHeader",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": true
+              }
+            },
+            {
+              "name": "isSpecificSheet",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "fileAccessMode",
+              "value": {
+                "type": "STRING",
+                "string": "EDIT"
+              }
+            },
+            {
+              "name": "isSecure",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "loadAddIns",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "excludeHiddenSheets",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "containsChart",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "setSensitivity",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "disableUpdateLinks",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "SESSION",
+            "sessionName": {
+              "type": "STRING",
+              "string": "ExcelSession"
+            },
+            "sessionTarget": "LOCAL"
+          }
+        },
+        {
+          "uid": "7f8d1e96-d91d-49cf-b301-57d2cd8bff52",
+          "commandName": "find",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "from",
+              "value": {
+                "type": "STRING",
+                "string": "BEGINNING"
+              }
+            },
+            {
+              "name": "till",
+              "value": {
+                "type": "STRING",
+                "string": "END"
+              }
+            },
+            {
+              "name": "findText",
+              "value": {
+                "type": "STRING",
+                "expression": "$v_InvoiceNumber$"
+              }
+            },
+            {
+              "name": "searchOptions",
+              "value": {
+                "type": "STRING",
+                "string": "BYROWS"
+              }
+            },
+            {
+              "name": "matchCase",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "matchEntireCell",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": true
+              }
+            },
+            {
+              "name": "session",
+              "value": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "ExcelSession"
+                }
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "v_DuplicateCellAddress"
+          }
+        },
+        {
+          "uid": "27b81040-9b57-48c0-ba36-ab568b1c5adb",
+          "commandName": "listSize",
+          "packageName": "List",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "sourceList",
+              "value": {
+                "type": "VARIABLE",
+                "variableName": "v_DuplicateCellAddress"
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "v_DuplicateListSize"
+          }
+        },
+        {
+          "uid": "e0f2851c-3745-44dc-bc33-85e7f0b332c7",
+          "commandName": "GoToCell",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "cellOption",
+              "value": {
+                "type": "STRING",
+                "string": "SpecificCell"
+              }
+            },
+            {
+              "name": "cell",
+              "value": {
+                "type": "STRING",
+                "string": "A1"
+              }
+            },
+            {
+              "name": "session",
+              "value": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "ExcelSession"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "uid": "c56000d1-6f5a-4b0c-b612-9b57e33dca63",
+          "commandName": "GoToNextEmptyCell",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "startFromActiveCell",
+              "value": {
+                "type": "STRING",
+                "string": "true"
+              }
+            },
+            {
+              "name": "towards",
+              "value": {
+                "type": "STRING",
+                "string": "down"
+              }
+            },
+            {
+              "name": "session",
+              "value": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "ExcelSession"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "uid": "0c88bc49-6fcf-4f17-8799-23cc33b535a3",
+          "commandName": "GetSingleRowNumber",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "activeCell",
+              "value": {
+                "type": "STRING",
+                "string": "true"
+              }
+            },
+            {
+              "name": "session",
+              "value": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "ExcelSession"
+                }
+              }
+            }
+          ],
+          "returnTo": {
+            "type": "VARIABLE",
+            "variableName": "v_NextRow"
+          }
+        },
+        {
+          "uid": "d974c11b-b6e7-4807-9133-0331c0892cb8",
+          "commandName": "if",
+          "packageName": "If",
+          "children": [
+            {
+              "uid": "2fab1291-45ae-42ca-8fab-a24c0973790f",
+              "commandName": "SetCell",
+              "packageName": "Excel_MS",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "cellOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SPECIFIC_CELL"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "A$v_NextRow$"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_InvoiceNumber$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "ExcelSession"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "7cc6e83f-c607-490f-9843-2b9db1516dce",
+              "commandName": "SetCell",
+              "packageName": "Excel_MS",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "cellOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SPECIFIC_CELL"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "B$v_NextRow$"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_VendorName$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "ExcelSession"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "08b7c996-9050-432f-9356-27d5bfb3f508",
+              "commandName": "SetCell",
+              "packageName": "Excel_MS",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "cellOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SPECIFIC_CELL"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "C$v_NextRow$"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_TotalAmount$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "ExcelSession"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "d2dae6ff-3538-4151-a8ee-ceb66956f043",
+              "commandName": "SetCell",
+              "packageName": "Excel_MS",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "cellOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SPECIFIC_CELL"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "D$v_NextRow$"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_InvoiceDate$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "ExcelSession"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "440ad3f2-29a3-42d9-83c9-d6fd4fae378b",
+              "commandName": "SetCell",
+              "packageName": "Excel_MS",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "cellOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SPECIFIC_CELL"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "E$v_NextRow$"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_DueDate$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "ExcelSession"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "b78a0fda-3606-46a4-b619-f310f5645632",
+              "commandName": "SetCell",
+              "packageName": "Excel_MS",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "cellOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "SPECIFIC_CELL"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "F$v_NextRow$"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_FileName$"
+                  }
+                },
+                {
+                  "name": "session",
+                  "value": {
+                    "type": "SESSION",
+                    "sessionName": {
+                      "type": "STRING",
+                      "string": "ExcelSession"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "uid": "a392f253-d532-4b07-99f1-884a4355f9d8",
+              "commandName": "assign",
+              "packageName": "String",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "sourceString",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "$v_EmailSummary$$String:newline$Processed: $v_InvoiceNumber$ | $v_VendorName$ | $v_TotalAmount$"
+                  }
+                }
+              ],
+              "returnTo": {
+                "type": "VARIABLE",
+                "variableName": "v_EmailSummary"
+              }
+            }
+          ],
+          "branches": [
+            {
+              "uid": "61a06374-a7a9-4baa-9fad-107e1415f6aa",
+              "commandName": "else",
+              "packageName": "If",
+              "children": [
+                {
+                  "uid": "7f87034a-729a-4947-9deb-5f7625462fcf",
+                  "commandName": "assign",
+                  "packageName": "String",
+                  "disabled": false,
+                  "attributes": [
+                    {
+                      "name": "sourceString",
+                      "value": {
+                        "type": "STRING",
+                        "expression": "$v_EmailSummary$$String:newline$Duplicate skipped: $v_FileName$"
+                      }
+                    }
+                  ],
+                  "returnTo": {
+                    "type": "VARIABLE",
+                    "variableName": "v_EmailSummary"
+                  }
+                }
+              ],
+              "disabled": false
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "attributes": [
+                {
+                  "name": "variable",
+                  "value": {
+                    "type": "NUMBER",
+                    "expression": "$v_DuplicateListSize$"
+                  }
+                },
+                {
+                  "name": "operator",
+                  "value": {
+                    "type": "STRING",
+                    "string": "EQ"
+                  }
+                },
+                {
+                  "name": "value",
+                  "value": {
+                    "type": "NUMBER",
+                    "number": "0"
+                  }
+                }
+              ],
+              "name": "condition",
+              "value": {
+                "type": "CONDITIONAL",
+                "conditionalName": "numberVariable",
+                "packageName": "Number"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "0c533ff2-3c25-482c-b949-c52e7c74e268",
+          "commandName": "SaveSpreadSheet",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "session",
+              "value": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "ExcelSession"
+                }
+              }
+            },
+            {
+              "name": "isDisplayErrorEnabled",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        },
+        {
+          "uid": "6d7f9f25-a7d5-4a03-b528-1c7386494c72",
+          "commandName": "CloseSpreadsheet",
+          "packageName": "Excel_MS",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "session",
+              "value": {
+                "type": "SESSION",
+                "sessionName": {
+                  "type": "STRING",
+                  "string": "ExcelSession"
+                }
+              }
+            },
+            {
+              "name": "isSave",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "isDisplayErrorEnabled",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ]
+        }
+      ],
+      "disabled": false,
+      "attributes": [
+        {
+          "name": "loopType",
+          "value": {
+            "type": "STRING",
+            "string": "ITERATOR"
+          }
+        },
+        {
+          "name": "iterator",
+          "returnTo": {
+            "type": "DICTIONARY",
+            "dictionary": [
+              {
+                "key": "name",
+                "value": {
+                  "type": "VARIABLE",
+                  "variableName": "v_FileName"
+                }
+              },
+              {
+                "key": "extension",
+                "value": {
+                  "type": "VARIABLE",
+                  "variableName": "v_FileExtension"
+                }
+              }
+            ]
+          },
+          "attributes": [
+            {
+              "name": "folderPath",
+              "value": {
+                "type": "STRING",
+                "expression": "$v_InvoicesFolder$"
+              }
+            }
+          ],
+          "value": {
+            "type": "ITERATOR",
+            "iteratorName": "loop.iterators.files",
+            "packageName": "File"
+          }
+        }
+      ]
+    },
+    {
+      "uid": "1c154221-74ee-424a-8600-a4f8904c94f8",
+      "commandName": "try",
+      "packageName": "ErrorHandler",
+      "children": [
+        {
+          "uid": "b39b7ce4-17b5-48d0-ba7d-30efbd676c9e",
+          "commandName": "SendMailV2",
+          "packageName": "Email",
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "toAddress",
+              "value": {
+                "type": "STRING",
+                "expression": "$v_NotificationEmail$"
+              }
+            },
+            {
+              "name": "cc",
+              "value": {
+                "type": "STRING",
+                "string": ""
+              }
+            },
+            {
+              "name": "bcc",
+              "value": {
+                "type": "STRING",
+                "string": ""
+              }
+            },
+            {
+              "name": "replyTO",
+              "value": {
+                "type": "STRING",
+                "string": ""
+              }
+            },
+            {
+              "name": "invalidAddress",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "importance",
+              "value": {
+                "type": "STRING",
+                "string": "Normal"
+              }
+            },
+            {
+              "name": "subject",
+              "value": {
+                "type": "STRING",
+                "string": "Accounts Payable Invoice Automation - Processing Complete"
+              }
+            },
+            {
+              "name": "ensureAttachmentsExist",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "bodyFormat",
+              "value": {
+                "type": "STRING",
+                "string": "PLAINTEXT"
+              }
+            },
+            {
+              "name": "message",
+              "value": {
+                "type": "STRING",
+                "expression": "$v_EmailSummary$"
+              }
+            },
+            {
+              "name": "goGreen",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            },
+            {
+              "name": "serverType",
+              "value": {
+                "type": "STRING",
+                "string": "OUTLOOK"
+              }
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "uid": "40630a04-1097-4859-af49-2716f540714a",
+          "commandName": "catch",
+          "packageName": "ErrorHandler",
+          "children": [
+            {
+              "uid": "e9908882-d558-4333-ba79-66f84ee073e6",
+              "commandName": "logToFile",
+              "packageName": "LogToFile",
+              "disabled": false,
+              "attributes": [
+                {
+                  "name": "filePath",
+                  "value": {
+                    "type": "FILE",
+                    "expression": "file://$v_ProjectFolder$/ErrorLog.txt"
+                  }
+                },
+                {
+                  "name": "logContent",
+                  "value": {
+                    "type": "STRING",
+                    "expression": "ERROR sending email: $v_ErrorMessage$ (Line: $v_ErrorLine.Number:toString$)"
+                  }
+                },
+                {
+                  "name": "appendTimestamp",
+                  "value": {
+                    "type": "BOOLEAN",
+                    "boolean": true
+                  }
+                },
+                {
+                  "name": "logOption",
+                  "value": {
+                    "type": "STRING",
+                    "string": "APPEND_FILE"
+                  }
+                },
+                {
+                  "name": "encodingValue",
+                  "value": {
+                    "type": "STRING",
+                    "string": "ANSI"
+                  }
+                }
+              ]
+            }
+          ],
+          "disabled": false,
+          "attributes": [
+            {
+              "name": "exceptionType",
+              "value": {
+                "type": "EXCEPTION",
+                "exceptionName": "BotException",
+                "packageName": "ErrorHandler"
+              }
+            },
+            {
+              "name": "continueOnError",
+              "value": {
+                "type": "BOOLEAN",
+                "boolean": false
+              }
+            }
+          ],
+          "returns": {
+            "errorMessage": {
+              "type": "VARIABLE",
+              "variableName": "v_ErrorMessage"
+            },
+            "errorLineNumber": {
+              "type": "VARIABLE",
+              "variableName": "v_ErrorLine"
+            }
+          }
+        }
+      ],
+      "disabled": false
+    }
+  ],
+  "variables": [
+    {
+      "name": "v_InvoicePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_InvoiceNumber",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_VendorName",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_TotalAmount",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_InvoiceDate",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_DueDate",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_EmailSummary",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_OutputFolder",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\antho\\Desktop\\AutomationAnywhere\\Output"
+      }
+    },
+    {
+      "name": "v_InvoicesFolder",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\antho\\Desktop\\AutomationAnywhere\\Invoices"
+      }
+    },
+    {
+      "name": "v_ExcelQueuePath",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\antho\\Desktop\\AutomationAnywhere\\InvoiceQueue.xlsx"
+      }
+    },
+    {
+      "name": "v_NotificationEmail",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "AnthonyIII.Lumogdang@6kqu2.onmicrosoft.com"
+      }
+    },
+    {
+      "name": "v_FileName",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_FileExtension",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_DuplicateCellAddress",
+      "description": "",
+      "type": "LIST",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "subtype": "STRING",
+      "defaultValue": {
+        "type": "LIST",
+        "list": []
+      }
+    },
+    {
+      "name": "v_DuplicateListSize",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "v_NextRow",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_ErrorMessage",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": ""
+      }
+    },
+    {
+      "name": "v_ErrorLine",
+      "description": "",
+      "type": "NUMBER",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "NUMBER",
+        "number": "0"
+      }
+    },
+    {
+      "name": "v_ProjectFolder",
+      "description": "",
+      "type": "STRING",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "STRING",
+        "string": "C:\\Users\\antho\\Desktop\\AutomationAnywhere"
+      }
+    },
+    {
+      "name": "v_CSVData",
+      "description": "",
+      "type": "TABLE",
+      "readOnly": false,
+      "input": false,
+      "output": false,
+      "defaultValue": {
+        "type": "TABLE",
+        "table": {
+          "schema": [
+            {
+              "type": "STRING"
+            }
+          ],
+          "rows": [
+            {
+              "values": [
+                {
+                  "type": "STRING",
+                  "string": ""
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "CsvTxt",
+      "version": "2.15.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "DataTable",
+      "version": "4.18.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Email",
+      "version": "3.33.5",
+      "settingsAttributes": []
+    },
+    {
+      "name": "ErrorHandler",
+      "version": "2.13.0-20241115-120032",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Excel_MS",
+      "version": "6.23.16",
+      "settingsAttributes": []
+    },
+    {
+      "name": "File",
+      "version": "6.14.2",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Folder",
+      "version": "6.13.0",
+      "settingsAttributes": []
+    },
+    {
+      "name": "If",
+      "version": "3.8.0-20241115-115929",
+      "settingsAttributes": []
+    },
+    {
+      "name": "IQ-Bot-Extraction360",
+      "version": "1.0.0-20220401-172616",
+      "settingsAttributes": []
+    },
+    {
+      "name": "List",
+      "version": "2.16.2",
+      "settingsAttributes": []
+    },
+    {
+      "name": "LogToFile",
+      "version": "3.11.1",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Loop",
+      "version": "3.10.0-20251030-061555",
+      "settingsAttributes": []
+    },
+    {
+      "name": "Number",
+      "version": "3.11.3",
+      "settingsAttributes": []
+    },
+    {
+      "name": "String",
+      "version": "5.12.2",
+      "settingsAttributes": []
+    }
+  ],
+  "properties": {
+    "botCodeVersion": "7",
+    "improvedNumberSupport": true,
+    "timeout": "0s",
+    "automationPriority": "PRIORITY_MEDIUM",
+    "runInChildWindow": false,
+    "runInChildWindowMode": "DESKTOP"
+  },
+  "workItemTemplateName": null
+}
